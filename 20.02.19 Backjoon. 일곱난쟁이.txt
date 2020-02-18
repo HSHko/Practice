@@ -1,0 +1,50 @@
+// ===========================================
+// 20.02.19 Backjoon. 일곱난쟁이
+// https://www.acmicpc.net/problem/2309
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+
+
+int main(){
+    
+    
+    const int N = 9;
+    int Area[N+1];
+    int sum = 0;
+    
+    for1(i,N){
+        cin >> Area[i];
+        sum += Area[i];
+    }
+    int ansa = 0, ansb = 0;
+    for(int i = 1; i <= N-1; i++){
+        for(int j = i+1; j <= N; j++){
+            
+            if( (sum - Area[i] - Area[j]) == 100){
+                ansa = Area[i]; ansb = Area[j];
+                break;
+            }
+            
+            
+        }
+    }
+    
+    sort(&Area[1], &Area[1]+9, less<int>());
+    for1(i,N){
+        if(Area[i] != ansa && Area[i] != ansb) cout << Area[i] << ET;
+    }
+    
+}
+
