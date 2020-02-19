@@ -1,0 +1,63 @@
+// ===========================================
+// 20.02.19 codforces 550C. Divisibility by Eight
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+
+
+int main(){
+    string s;
+    cin >> s;
+    
+    for0(i, s.size()){
+        
+        int sum = s[i] - '0';
+        if( (sum&7) == 0 ){
+            cout << "YES" << ET << sum;
+            return 0;
+        }
+    }
+    
+    if(s.size() < 2) goto ANS;
+    for0(i, s.size()-1){
+        for(int j = i+1; j < s.size(); j++){
+            
+            int sum = 10*(s[i] - '0') + (s[j] - '0');
+            if( (sum&7) == 0 ){
+                cout << "YES" << ET << sum;
+                return 0;
+            }
+        }
+    }
+    
+    if(s.size() < 3) goto ANS;
+    for0(i, s.size()-2){
+        for(int j = i + 1; j < s.size()-1; j++){
+            for(int k = j + 1; k < s.size(); k++){
+                
+                int sum = 100*(s[i] - '0') + 10*(s[j] - '0') + (s[k] - '0');
+                if( (sum&7) == 0){
+                    cout << "YES" << ET << sum;
+                    return 0;
+                }
+                
+            }
+        }
+    }
+    
+ANS:
+    cout << "NO";
+}
+
