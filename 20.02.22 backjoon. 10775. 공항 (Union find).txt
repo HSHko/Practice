@@ -1,0 +1,51 @@
+// ===========================================
+// 20.02.22 backjoon. 10775. 공항 (Union find)
+// https://www.acmicpc.net/problem/10775
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+const int MAX = pow(10,5)+5;
+int node[MAX];
+
+int Union_find(int u){
+    if(u == node[u]) return u;
+    return node[u] = Union_find(node[u]);
+}
+
+void Union(int u, int v){
+    u = Union_find(u);
+    v = Union_find(v);
+    node[u] = v;
+}
+
+int main(){
+    
+    int N, M;
+    cin >> N >> M;
+    
+    for1(i,N) node[i] = i;
+    node[0] = 0;
+    
+    int ans = 0;
+    for1(i,M){
+        int a; cin >> a;
+        if(Union_find(a) == 0) break;
+        
+        Union(a, Union_find(a)-1);
+        ans++;
+    }
+    
+    cout << ans;
+    
+}
