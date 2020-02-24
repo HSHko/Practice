@@ -1,0 +1,247 @@
+// ===========================================
+// 20.02.24 backjoon. 3033. 가장 긴 문자열 (Rabin-Karp)
+// fail
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+constexpr uint32_t mod = 4000000007;
+
+int Rabin_karp(string text, string goal){
+    int N = text.length();
+    int M = goal.length();
+    int D = 26;
+    
+    int GM = 1;
+    for(int i = 0; i < M - 1; i++)
+        GM = (GM*D) % mod;
+    
+    int T = 0, G = 0;
+    for(int i = 0; i < M; i++){
+        T = (D*T + text[i]) % mod;
+        G = (D*G + goal[i]) % mod; 
+    }
+    
+    int count = 0;
+    for(int i = 0; i < N - M + 1; i++){
+        cout << T << ' ' << G << ' ' << i << ET;
+        
+        if(T == G){
+            cout << 'i' << i << ET;
+            count++;
+        }
+        
+        T = (D*(T - text[i]*GM) + text[i+M]) % mod;
+        
+    }
+    
+    if(count > 0) return count;
+    return -1;
+    
+}
+
+int main(){
+    
+    ios::sync_with_stdio(0); cin.tie(0);
+    
+    //Rabin_karp
+    int a; cin >> a;
+    string text; cin >> text;
+    
+    string goal; 
+    int M; M = text.length()/2;
+    int N; N = text.length();
+    
+    /*
+    int res = -1;
+    while(M > 0){
+        for(int i = 0; i < N - M + 1; i++){
+            goal = text.substr(i, M);
+            res = max(res, Rabin_karp(text, goal));
+        }
+        if(res > 1){
+            cout << M;
+            return 0;
+        } 
+        M--;
+    }
+    
+    cout << '0' << ET;
+    */
+    
+    
+    //debug
+    M--;
+    int res = -1;
+    while(M > 0){
+        for(int i = 0; i < N - M + 1; i++){
+            goal = text.substr(i, M);
+            cout << "text " << text << ET;
+            cout << "goal " << goal << ET;
+            res = max(res, Rabin_karp(text, goal));
+            cout << "res " << res << ET;
+            cout << ET;
+        }
+        if(res > 0){
+            cout << M;
+            
+        } 
+        M--;
+    }
+    
+    cout << '0' << ET;
+    
+    /*
+    
+Enter a title here
+Main.cpp 
+Success  
+  
+        
+出力
+コンパイルエラー
+入力
+コメント 0
+(0.00 sec)
+ 
+text sabcabcfabc
+goal sabc
+2089459 2089459 0
+i0
+1773791 2089459 1
+1791992 2089459 2
+1808243 2089459 3
+1773796 2089459 4
+1792121 2089459 5
+1811596 2089459 6
+1860971 2089459 7
+res 1
+
+text sabcabcfabc
+goal abca
+2089459 1773791 0
+1773791 1773791 1
+i1
+1791992 1773791 2
+1808243 1773791 3
+1773796 1773791 4
+1792121 1773791 5
+1811596 1773791 6
+1860971 1773791 7
+res 1
+
+text sabcabcfabc
+goal bcab
+2089459 1791992 0
+1773791 1791992 1
+1791992 1791992 2
+i2
+1808243 1791992 3
+1773796 1791992 4
+1792121 1791992 5
+1811596 1791992 6
+1860971 1791992 7
+res 1
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+int rabin_karp(string text, string goal, int D, int mod){
+    int N = text.length();
+    int M = goal.length();
+    
+    int H = 1;
+    for(int i = 0; i < M-1; i++)
+        H = (H*D)%mod;
+    
+    int T = 0, G = 0;
+    for(int i = 0; i < M; i++){
+        T = (D*T + text[i]) % mod;
+        G = (D*G + goal[i]) % mod;
+    }
+    
+    int count = 0;
+    for(int i = 0; i < N-M+1; i++){
+        //cout << T << ' ' << G << ' ' << i << ' ' << N << ' ' << M << ET;
+        if(T == G){
+            bool chk = false;;
+            for(int j = 0; j < M; j++){
+                if(goal[j] != text[i+j]) break;
+                if(j == M-1) chk = true;
+            }
+            if(chk) count++;
+            //if(chk) cout << "found" << i << ET;
+        } 
+        if(count > 1) break;
+        
+        //new_hash = {old_hash - delete_char*pow(D, str_len-1)} % mod
+        T = (D*(T - 1LL*text[i]*H) + text[i+M]) % mod;
+        if(T < 0) T += mod;
+    }
+    return count;
+}
+
+int main(){
+    
+    ios::sync_with_stdio(0), cin.tie(0);
+    
+    int N; cin >> N;
+    if(N == 0){
+        cout << '0';
+        return 0;
+    }
+    
+    string text; cin >> text;
+    
+    const int D = 256;
+    const int mod = 100007;
+    //cout << rabin_karp("sabcabcfabc", "fabc", D, mod) << ET;
+    
+    //binary search & Rabin-Karp
+    int l = 0, r = N, mid, ans = 0;
+    
+    while(l <= r){
+        mid = (l+r)>>1;
+        bool chk = false;
+        int res = 0;
+        
+        for(int i = 0; i < N - mid + 1; i++){
+            string goal = text.substr(i, mid);
+            res = rabin_karp(text, goal, D, mod);
+            
+            if(res > 1){
+                chk = true;
+                //cout << "mid now : " << mid << ET;
+                ans = max(ans, mid);
+                break;
+            } 
+        }
+        
+        if(chk)
+            l = mid + 1;
+        else
+            r = mid - 1;
+        
+    }
+    cout << ans;
+    
+}
+
