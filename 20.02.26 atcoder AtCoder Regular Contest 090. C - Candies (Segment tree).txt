@@ -1,0 +1,63 @@
+// ===========================================
+// 20.02.26 atcoder AtCoder Regular Contest 090. C - Candies 
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define ET "\n"
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+
+int n;
+const int MAX = 101;
+int t[4*MAX];
+
+void build_tree(){
+    for(int i = n-1; i > 0; i--) t[i] = t[i<<1] + t[i<<1|1];
+}
+
+void modify_tree(int p, int value){
+    for(t[p += n] = value; p > 1; p>>=1) t[p>>1] = t[p] + t[p^1];
+}
+
+int segment_tree(int l, int r){
+    int res = 0; r++;
+    for(l += n, r += n; l<r; l>>=1, r>>=1){
+        if(l&1) res += t[l++];
+        if(r&1) res += t[--r];
+    }
+    return res;
+}
+
+
+
+int main(){
+    ios::sync_with_stdio(false); cin.tie(0);
+    
+    int m;
+    cin >> m;
+    n = 2*m;
+    
+    for(int i = 0; i < m; i++)
+        cin >> t[n+i];
+    for(int i = 0; i < m; i++)
+        cin >> t[n+m+i];
+    
+    build_tree();
+    
+    int ans = 0;
+    for(int i = 0; i < m; i++){
+        ans = max(
+            ans,
+            segment_tree(0,i) + segment_tree(i+m,n-1)
+            );
+        //cout << segment_tree(0,i) << " " << segment_tree(i+m,n-1) << ET;
+    }
+    cout << ans;
+}
+
