@@ -1,0 +1,39 @@
+// ===========================================
+// 20.03.05 backjoon 9461. 파도반 수열 (Berlekamp-Massey)
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define ET "\n"
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+
+
+
+int main(){
+    
+    int n; cin >> n;
+    
+    ll dp[102];
+    while(n--){
+        CLR(dp); 
+        dp[1] = 1;
+        dp[2] = 1;
+        dp[3] = 1;
+        
+        int k; cin >> k;
+        for(int i = 4; i <= k; i++){
+            dp[i] = dp[i-2] + dp[i-3];
+        }
+        
+        cout << dp[k] << ET;
+        
+    }
+    
+}
+
