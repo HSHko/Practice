@@ -1,0 +1,45 @@
+// ===========================================
+// 20.03.08 backjoon 1463. 1로 만들기 (dp)
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int i=1; i<=n; i++)
+#define repz(i,n) for(int i = 0; i<n; i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+const int mini = 10e5+5;
+
+
+
+int main(){
+    
+    ll dp[1000005];
+    
+    /*
+    dp[i] = dp[i-1] + 1;
+    if(i % 2 == 0) dp[i] = min(dp[i], dp[i/2]+1);
+    if(i % 3 == 0) dp[i] = min(dp[i], dp[1/3]+1);
+    */
+    
+    dp[1] = 0;
+    dp[2] = 1;
+    dp[3] = 1;
+    
+    int n; cin >> n;
+    for(int i = 4; i <= n; i++){
+        dp[i] = dp[i-1] + 1;
+        if(i % 2 == 0) dp[i] = min(dp[i], dp[i/2]+1);
+        if(i % 3 == 0) dp[i] = min(dp[i], dp[i/3]+1);
+        
+    }
+    
+    cout << dp[n] << ET;
+}
+
