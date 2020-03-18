@@ -1,0 +1,136 @@
+//==========================================c#
+/* ===========================================
+// 20.03.18 backjoon 1753. 최단경로 (dajikstra, heap) (c#)
+// heap sort, priority_queue implemented
+// modified to maxHeap
+=========================================== */
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+
+public class strGph : IComparable<strGph>{
+    public int to;
+    public int wght;
+    
+    public strGph(int t, int w){
+        to = t;
+        wght = w;
+    }
+    public int CompareTo(strGph fd){
+        return (fd.wght).CompareTo(wght);
+    }
+}
+
+
+class Program { 
+    
+    static void dajikstra(int start, ref List<strGph>[] gph, ref int[] dist){
+        var pq = new priority_queue<strGph>();
+        pq.push(new strGph(start, 0));
+        
+        while(!pq.empty()){
+            var now = pq.top(); pq.pop();
+            
+            if(now.wght > dist[now.to]) continue;
+            
+            foreach(var next in gph[now.to]){
+                //Console.WriteLine("{0}, {1}, {2}, {3}", next.to, next.wght, now.to, now.wght);
+                if(dist[next.to] > dist[now.to] + next.wght){
+                    dist[next.to] = dist[now.to] + next.wght;
+                    pq.push(new strGph(next.to, dist[next.to]));
+                }
+            }
+            
+        }
+    }
+    
+    static void Main() { 
+        StreamWriter so = new StreamWriter(Console.OpenStandardOutput());
+        string[] sip; int[] iip;
+        
+        sip = Console.ReadLine().Split();
+        var v = int.Parse(sip[0]);
+        var e = int.Parse(sip[1]);
+        var start = int.Parse(Console.ReadLine());
+        
+        var gph = new List<strGph>[v+1];
+        for(int i=0; i<gph.Length; i++) gph[i] = new List<strGph>();
+        for(int i=1; i<=e; i++){
+            iip = Console.ReadLine().Split().Select(fd=>int.Parse(fd)).ToArray();
+            gph[iip[0]].Add(new strGph(iip[1],iip[2]) );
+        }
+        
+        var dist = new int[v+1];
+        dist = dist.Select(fd=>1000000000).ToArray();
+        dist[start] = 0;
+        
+        dajikstra(start, ref gph, ref dist);
+        
+        for(int i=1; i<=v; i++){
+            var ans = dist[i];
+            if(ans == 1000000000){
+                so.WriteLine("INF".ToString());
+            }
+            else{
+                so.WriteLine(ans.ToString());
+            }
+        }
+        so.Close();
+    } 
+}
+
+public class priority_queue<T> where T : IComparable<T>{
+    private List<T> data;
+    
+    private void swp(int u, int v){
+        T temp = data[u];
+        data[u] = data[v];
+        data[v] = temp;
+    }
+    public priority_queue(){
+        this.data = new List<T>();
+    }
+    public bool empty(){
+        return data.Count == 0;
+    }
+    public void push(T obj){
+        var idx = data.Count;
+        data.Add(obj);
+        while(idx > 0){
+            int nxt = (idx -1)>>1;
+            if( data[nxt].CompareTo(data[idx]) >= 0 ) break;
+            swp(idx, nxt);
+            idx = nxt;
+        }
+    }
+    public T top(){
+        if(empty()) throw new OverflowException("ERROR:empty PQ");
+        return data[0];
+    }
+    public void pop(){
+        if(empty()) throw new OverflowException("ERROR:empty PQ");
+        var cnt = data.Count;
+        swp(0, cnt-1);
+        data.RemoveAt(cnt-1);
+        cnt--;
+        
+        var idx = 0;
+        while(cnt > 0){
+            var cl = (idx<<1)+1;
+            var cr = (idx<<1)+2;
+            if(cr >= cnt) cr = cl;
+            if(cl >= cnt) cr = cl = idx;
+            
+            var nxt = ( data[cl].CompareTo(data[cr]) > 0 ? cl : cr);
+            if( data[nxt].CompareTo(data[idx]) > 0 ){
+                swp(idx, nxt);
+                idx = nxt;
+            }
+            else{
+                if(idx == 0) break;
+                idx = 0;
+            }
+        }
+    }
+}
