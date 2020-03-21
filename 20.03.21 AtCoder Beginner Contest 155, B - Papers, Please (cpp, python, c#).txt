@@ -1,0 +1,155 @@
+//=========================================c++
+/* ===========================================
+// 20.03.21 AtCoder Beginner Contest 155, B - Papers, Please
+// 
+// 
+=========================================== */
+/* ===========================================
+
+問題文
+あなたは AtCoder 王国の入国審査官です。
+入国者の書類にはいくつかの整数が書かれており、
+あなたの仕事はこれらが条件を満たすか判定することです。
+規約では、次の条件を満たすとき、またその時に限り、
+入国を承認することになっています。
+
+書類に書かれている整数のうち、偶数であるものは全て、
+3または 5で割り切れる。上の規約に従うとき、書類に N 個の整数 A1,A2,…,AN が
+書かれた入国者を承認するならば APPROVED を、しないならば DENIED を出力してください。
+
+test input:
+5
+6 7 9 10 31
+
+=========================================== */
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int (i)=1;(i)<=(n);i++)
+#define rez(i,n) for(int (i)=0;(i)<(n);i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+#define UQ unique_ptr
+#define MQ make_unique
+const ll INF = 1LL << 50;
+const int mini = 10e5+5;
+
+
+
+int main(){
+    int n; cin >> n;
+    
+    bool chk = true;
+    while(n--){
+        int a; cin>> a;
+        if ((a&1) == 0){
+            if (a%3 == 0 || a%5 == 0){
+                continue;
+            }
+            else{
+                chk = false;
+                break;
+            }
+        }
+        else{
+            continue;
+        }
+    }
+    
+    if (chk == true){
+        cout << "APPROVED";
+    }
+    else{
+        cout << "DENIED";
+    }
+}
+
+
+
+##======================================python3
+''' ===========================================
+## null
+##
+##
+=========================================== '''
+import sys
+from sys import stdin #read(), readline()
+input = stdin.readline
+import heapq #heappush(trgt, val) heappop(trgt) trgt[0] __lt__<
+sys.setrecursionlimit(10**6)
+INF = 1<<50
+
+if __name__ == '__main__':
+    n = int(input())
+    
+    chk = True;
+    
+    iip = list(map(int, input().split(' ')))
+    for i in range(n):
+        a = iip[i]
+        if a&1 == 0:
+            if a%3 == 0 or a%5 == 0:
+                continue;
+            else:
+                chk = False;
+                break;
+        else:
+            continue;
+    
+    if chk == True:
+        print("APPROVED")
+    else:
+        print("DENIED")
+    
+
+
+//==========================================c#
+/* ===========================================
+// null
+// 
+// 
+=========================================== */
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+
+class Program { 
+    static void Main() { 
+        StreamWriter so = new StreamWriter(Console.OpenStandardOutput());
+        string[] sip; int[] iip;
+        
+        var n = int.Parse(Console.ReadLine());
+        
+        var chk = true;
+        iip = Console.ReadLine().Split(' ').Select(fd=>int.Parse(fd)).ToArray();
+        
+        for (int i = 0; i < n; i++){
+            var a = iip[i];
+            
+            if ((a&1) == 0){
+                if (a%3 == 0 || a%5 == 0){
+                    continue;
+                }
+                else{
+                    chk = false;
+                    break;
+                }
+            }
+            else{
+                continue;
+            }
+        }
+
+        if (chk == true){
+            Console.WriteLine("APPROVED");
+        }
+        else{
+            Console.WriteLine("DENIED"); 
+        }
+
+
+    } 
+}
