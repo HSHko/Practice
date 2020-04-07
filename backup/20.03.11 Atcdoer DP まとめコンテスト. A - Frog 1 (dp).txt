@@ -1,0 +1,37 @@
+// ===========================================
+// 20.03.11 Atcdoer DP まとめコンテスト. A - Frog 1 (dp)
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int i=1; i<=n; i++)
+#define rez(i,n) for(int i = 0; i<n; i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+const int mini = 10e5+5;
+
+
+
+int main(){
+    int n; cin >> n;
+    
+    int x[mini];
+    rep(i,n) cin >> x[i];
+    
+    ll dp[mini];
+    dp[1] = 0;
+    dp[2] = abs(x[2] - x[1]);
+    
+    for(int i=3; i<=n; i++){
+        dp[i] = min(dp[i-1] + abs(x[i] - x[i-1]),
+                    dp[i-2] + abs(x[i] - x[i-2]));
+    }
+    cout << dp[n];
+}
+

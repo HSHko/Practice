@@ -1,0 +1,49 @@
+// ===========================================
+// 20.02.23 backjoon. 1920. 수 찾기 (Binary search)
+// https://www.acmicpc.net/problem/1920
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+void Binary_search(vector<int> &Area, int &Finding){
+    int l = 0, r = Area.size()-1, m;
+    while(r - l >= 0){
+        m = ((l + r)>>1);
+        if(Area[m] > Finding) 
+            r = m-1;
+        else if(Area[m] < Finding) 
+            l = m+1;
+        else{
+            cout << '1' << ET;
+            return;
+        }
+    }
+    cout << '0' << ET;
+    return;
+}
+
+int main(){
+    
+    ios::sync_with_stdio(0); cin.tie(0);
+    
+    int N; cin >> N;
+    vector<int> Area(N);
+    for0(i,N) cin >> Area[i];
+    sort(Area.begin(), Area.end(), less<int>());
+    
+    int M; cin >> M;
+    while(M--){
+        int Finding; cin >> Finding;
+        Binary_search(Area, Finding);
+    }
+}

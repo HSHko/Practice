@@ -1,0 +1,164 @@
+//=========================================c++
+/* ===========================================
+// 20.04.03 日立製作所 社会システム事業部 プログラミングコンテスト2020 - A. Hitachi String 
+// 
+// 
+=========================================== */
+/* ===========================================
+
+content
+
+=========================================== */
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int (i)=1;(i)<=(n);i++)
+#define rez(i,n) for(int (i)=0;(i)<(n);i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+#define UQ unique_ptr
+#define MQ make_unique
+const ll INF = 1LL << 50;
+const int MINI = 10e5+5;
+
+static struct GV{
+    string input;
+} gv;
+
+void build(){
+    cin >> gv.input;
+}
+
+void solve(){
+    int slen = gv.input.length();
+    if ((slen &1) == 1) {
+        cout << "No" << ET;
+        return;
+    }
+    
+    for (int i = 0; i < slen; i+=2) {
+        if (gv.input.substr(i,2) == "hi") {
+            
+        }
+        else {
+            cout << "No" << ET;
+            return;
+        }
+    }
+    
+    cout << "Yes" << ET;
+    return;
+}
+
+int main(){
+    build();
+    solve();
+    
+}
+
+
+
+##======================================python3
+import sys
+import collections
+input = sys.stdin.readline().rstrip
+from sys import stdin #read(), readline()
+sys.setrecursionlimit(10**6)
+INF = 1<<50
+MINI = 100005
+
+class gv:
+    input = None;
+    
+def build():
+    gv.str = input()
+
+def solve():
+    slen = len(gv.str)
+    if (slen&1) == 1:
+        print("No")
+        return
+    
+    for i in range(0,slen,2):
+        if (gv.str[i:i+2] == "hi") :
+            pass
+        else :
+            print("No")
+            return
+    
+    print("Yes")
+    
+    
+
+if __name__ == '__main__':
+    build()
+    solve()
+
+
+
+//==========================================c#
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+
+public class Run{
+    private static class gv{
+        public static string input;
+    }
+    
+    public void build(){
+        IOC io = new IOC();
+        
+        gv.input = io._string;
+    }
+    
+    public void fail(){
+        Console.WriteLine("No");
+    }
+    
+    public void solve(){
+        StreamWriter so = new StreamWriter(Console.OpenStandardOutput());
+        
+        var slen = gv.input.Length;
+        if ((slen&1) == 1) {
+            fail();
+            return;
+        }
+        for (int i = 0; i < slen; i += 2) {
+            if (gv.input.Substring(i,2) == "hi"){
+                continue;
+            }
+            fail();
+            return;
+        }
+        
+        Console.WriteLine("Yes");
+    }
+}
+
+class Program { 
+    static void Main() { 
+        var run = new Run();
+        run.build();
+        run.solve();
+        
+        
+        
+        
+    } 
+}
+
+public class IOC{
+    public int _int{get{return int.Parse(Console.ReadLine());}}
+    public int[] _inta{get{return Array.ConvertAll(Console.ReadLine().Split(), int.Parse);}}
+    public long _long{get{return long.Parse(Console.ReadLine());}}
+    public long[] _longa{get{return Array.ConvertAll(Console.ReadLine().Split(), long.Parse);}}
+    public string _string{get{return Console.ReadLine();}}
+    public string[] _stringa{get{return (Console.ReadLine().Split());}}
+    public double _double{get{return double.Parse(Console.ReadLine());}}
+    public double[] _doublea{get{return Array.ConvertAll(Console.ReadLine().Split(), double.Parse);}}
+}
+

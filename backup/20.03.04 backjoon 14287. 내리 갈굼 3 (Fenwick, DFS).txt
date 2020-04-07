@@ -1,0 +1,72 @@
+// ===========================================
+// 20.03.04 backjoon 14287. 내리 갈굼 3 (Fenwick, DFS)
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+
+const int MAX = 100010;
+
+vector<int> gph[MAX];
+int in[MAX];
+int out[MAX];
+
+ll fwSum(int arr[], int n, int p){
+    ll res = 0;
+    while(p > 0){
+        res += arr[p];
+        p -= (p & -p);
+    }
+    return res;
+}
+
+void fwUdt(int arr[], int n, int p, ll diff){
+    while(p <= n){
+        arr[p] += diff;
+        p += (p & -p);
+    }
+}
+
+int order = 0;
+void dfs(int p){
+    in[p] = ++order;
+    for(auto fd : gph[p]) dfs(fd);
+    out[p] = order;
+}
+
+int main(){
+    ios::sync_with_stdio(false); cin.tie(0);
+    
+    int n; cin >> n; //직원수
+    int m; cin >> m; //갈굼수
+    
+    int t[n+1]; CLR(t);
+    CLR(in); CLR(out);
+    for(int i = 1; i <= n; i++){ //직원의 상사 할당
+        int a; cin >> a;
+        if(i == 1) continue;
+        gph[a].push_back(i);
+    }
+    
+    dfs(1);
+    
+    while(m--){ //갈굼시작
+        int a, b; cin >> a >> b;
+        
+        if(a == 1){
+            int c; cin >> c;
+            fwUdt(t, n, in[b], c); 
+        }else
+        if(a == 2){
+            cout << fwSum(t, n, out[b]) - fwSum(t, n, in[b]-1) << ET;
+        }
+        
+    }
+    
+}

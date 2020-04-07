@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define ET "\n"
+#define FOR0(i,n) for(int i = 0; i < n; i++)
+#define FOR1(i,n) for(int i = 1; i <= n; i++)
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+/*
+codforces 4C Registration System
+*/
+
+int N, M;
+string input;
+
+int main(){
+    map<string, int> Area;
+    
+    cin >> N;
+    while(N--){
+        cin >> input;
+        
+        if(Area[input] >= 1){
+            cout << input << Area[input] << ET;;
+        }
+        else{
+            cout << "OK" << ET;
+        }
+        Area[input]++;
+    }
+}
+

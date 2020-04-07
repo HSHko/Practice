@@ -1,0 +1,98 @@
+// ===========================================
+// 20.03.07 Atcoder Beginner Contest 157. D - Friend Suggestions (Union find)
+// 
+// 
+// ===========================================
+
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int i=1; i<=n; i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+
+
+struct sStat{
+    int parent;     //union find parent
+    int lv;         //highest level of union find
+    int num;        //number of friend
+};
+
+int uFind(int u, struct sStat p[]){
+    if(u == p[u].parent) return u;
+    else return p[u].parent = uFind(p[u].parent, p);
+}
+
+void unite(int u, int v, struct sStat ss[]){
+    u = uFind(u, ss);
+    v = uFind(v, ss);
+    
+    if(u == v) return;
+    if(ss[u].lv > ss[v].lv) u^=v^=u^=v;
+    ss[v].lv += ss[u].lv + 1;
+    ss[u].parent = v;
+}
+
+int main(){
+    
+    
+    int n, m, k; cin >> n >> m >> k;
+    
+    const int MAXN = n + 5;
+    sStat frnd[MAXN]; CLR(frnd);
+    
+    //-----------------------------------------
+    
+    rep(i,n){
+        frnd[i].parent = i;
+    }
+    
+    rep(i,m){
+        int a, b; cin >> a >> b;
+        frnd[a].num++;
+        frnd[b].num++;
+        unite(a, b, frnd);
+    }
+    
+    /*
+    rep(i,n){
+        cout << "lv & num of " << i << " is now : ";
+        cout << frnd[i].parent << "L ";
+        rep(j,n) cout << frnd[i].lv << " ";
+        rep(j,n) cout << frnd[i].num << " ";
+        cout << ET;
+    }
+    
+    cout << ET << ET;
+    */
+    
+    rep(i,k){
+        int a, b; cin >> a >> b;
+        if(uFind(a, frnd) == uFind(b, frnd)){
+            frnd[a].num++;
+            frnd[b].num++;
+        }
+        
+    }
+    
+    /*
+    rep(i,n){
+        cout << "lv & num of " << i << " is now : ";
+        cout << frnd[i].parent << "L ";
+        rep(j,n) cout << frnd[i].lv << " ";
+        rep(j,n) cout << frnd[i].num << " ";
+        cout << ET;
+    }
+    */
+    
+    
+    //-----------------------------------------
+    for(int i = 1; i <= n; i++){
+        int p = uFind(i, frnd);
+        cout << frnd[p].lv - frnd[i].num << " ";
+    }
+}

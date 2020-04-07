@@ -1,0 +1,52 @@
+// ===========================================
+// 20.02.19 backjoon. 1717. 집합의 표현
+// https://www.acmicpc.net/problem/1717
+// Union find
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+const int MAX = 1000002;
+int Node[MAX];
+
+int Union_find(int u){
+    if(u == Node[u]) return u;
+    return Node[u] = Union_find(Node[u]);
+}
+
+void Union(int u, int v){
+    u = Union_find(u);
+    v = Union_find(v);
+    Node[u] = v;
+}
+
+int main(){
+    ios::sync_with_stdio(0); cin.tie(0);
+    
+    int N, M; cin >> N >> M;
+    for0(i,N+1) Node[i] = i;
+    for0(i,M){
+        int a, b, c; cin >> a >> b >> c;
+        if(a == 0){
+            Union(b, c);
+        }
+        else if(a == 1){
+            if(Union_find(b) == Union_find(c))
+                cout << "YES" << ET;
+            else
+                cout << "NO" << ET;
+            
+        }
+    }
+    
+}
+

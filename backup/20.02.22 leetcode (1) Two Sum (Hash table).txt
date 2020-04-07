@@ -1,0 +1,36 @@
+/*
+//----------------------------------------
+//20.02.22 leetcode 1. Two Sum (Hash table)
+//a few seconds ago	Accepted	12 ms	10.1 MB	cpp
+//----------------------------------------
+
+Example:
+
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+*/
+//----------------------------------------
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        
+        unordered_map<int, int> hash;
+        vector<int> res;
+        
+        int a = nums.size();
+        for(int i = 0; i < a; i++){
+            int n_find = target - nums[i];
+            
+            if(hash.find(n_find) != hash.end()){
+                res.push_back(hash[n_find] );
+                res.push_back(i);
+                return res;
+            }
+            hash[nums[i]] = i;
+        }
+        return {};
+    }
+};

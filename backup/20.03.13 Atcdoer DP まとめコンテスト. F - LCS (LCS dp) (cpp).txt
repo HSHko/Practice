@@ -1,0 +1,103 @@
+// ===========================================
+// 20.03.13 Atcdoer DP まとめコンテスト. F - LCS (LCS dp)
+// 
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+#define rep(i,n) for(int (i)=1;(i)<=(n);i++)
+#define rez(i,n) for(int (i)=0;(i)<(n);i++)
+#define ET "\n"
+#define CLR(arr) memset(&arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const ll INF = 1LL << 50;
+const int mini = 10e5+5;
+
+
+void getLCS(string s1, string s2, int dp[], string &res){
+    int l1 = s1.length();
+    int l2 = s2.length();
+    
+    #define md(y,x) (y)*(l2+1)+(x)
+    int nmax = dp[md(l1,l2)];
+    int cy = l1;
+    int cx = l2;
+    
+    while(nmax>0 && cy>0 && cx>0){
+        //cout << "cy" << cy << " cx" << cx << ET;
+        int ny = cy;
+        int nx = cx;
+        
+        if(dp[md(cy-1, cx)] == dp[md(cy, cx)]){
+            ny--;
+        }
+        else if(dp[md(cy, cx-1)] == dp[md(cy, cx)]){
+            nx--;
+        }
+        else{
+            ny--;
+            nx--;
+            nmax--;
+            res = s2[cx-1] + res;
+            //cout << "now nmax " << nmax << " " << "cy cx res is " << cy << " " << cx << " " << res << ET;
+        }
+        cy = ny;
+        cx = nx;
+    }
+    #undef md
+}
+
+int main(){
+    
+    string s1, s2; cin >> s1 >> s2;
+    int l1, l2;
+    l1 = s1.length(); l2 = s2.length();
+    
+    int dp[l1+1][l2+1]; CLR(dp);
+    rep(y,l1){
+        rep(x,l2){
+            int k = (s1[y-1] == s2[x-1]);
+            dp[y][x] = max({dp[y][x-1], dp[y-1][x],
+                            dp[y-1][x-1] + k});
+            if(k){
+            }
+        }
+    }
+    
+    string ans = "";
+    getLCS(s1, s2, (int*)dp, ans);
+    cout << ans << ET;
+    
+    
+    //abracadabra
+    //avadakedavra
+    //  a v a d a k e d a v r a 
+    //a 1 1 1 1 1 1 1 1 1 1 1 1 
+    //b 1 1 1 1 1 1 1 1 1 1 1 1 
+    //r 1 1 1 1 1 1 1 1 1 1 2 2 
+    //a 1 1 2 2 2 2 2 2 2 2 2 3 
+    //c 1 1 2 2 2 2 2 2 2 2 2 3 
+    //a 1 1 2 2 3 3 3 3 3 3 3 3 
+    //d 1 1 2 3 3 3 3 4 4 4 4 4 
+    //a 1 1 2 3 4 4 4 4 5 5 5 5 
+    //b 1 1 2 3 4 4 4 4 5 5 5 5 
+    //r 1 1 2 3 4 4 4 4 5 5 6 6 
+    //a 1 1 2 3 4 4 4 4 5 5 6 7 
+    /*
+    cout << "  ";
+    rez(i,l2) cout << s2[i] << " "; 
+    cout << ET;
+    rep(i,l1){
+        cout << s1[i-1] << " ";
+        rep(j,l2){
+            cout << dp[i][j] << " ";
+        }
+        cout << ET;
+    }
+    */
+    
+}
+

@@ -1,0 +1,98 @@
+// ===========================================
+// 20.02.24 backjoon. 3033. 가장 긴 문자열 (Rabin-Karp)
+// fail
+// 
+// ===========================================
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+
+int rabin_karp(string text, string goal, int D, int mod){
+    int N = text.length();
+    int M = goal.length();
+    
+    int H = 1;
+    for(int i = 0; i < M-1; i++)
+        H = (H*D)%mod;
+    
+    int T = 0, G = 0;
+    for(int i = 0; i < M; i++){
+        T = (D*T + text[i]) % mod;
+        G = (D*G + goal[i]) % mod;
+    }
+    
+    int count = 0;
+    for(int i = 0; i < N-M+1; i++){
+        //cout << T << ' ' << G << ' ' << i << ' ' << N << ' ' << M << ET;
+        if(T == G){
+            bool chk = false;;
+            for(int j = 0; j < M; j++){
+                if(goal[j] != text[i+j]) break;
+                if(j == M-1) chk = true;
+            }
+            if(chk) count++;
+            //if(chk) cout << "found" << i << ET;
+        } 
+        if(count > 1) break;
+        
+        //new_hash = {old_hash - delete_char*pow(D, str_len-1)} % mod
+        T = (D*(T - 1LL*text[i]*H) + text[i+M]) % mod;
+        if(T < 0) T += mod;
+    }
+    return count;
+}
+
+int main(){
+    
+    ios::sync_with_stdio(0), cin.tie(0);
+    
+    int N; cin >> N;
+    if(N == 0){
+        cout << '0';
+        return 0;
+    }
+    
+    string text; cin >> text;
+    
+    const int D = 256;
+    const int mod = 100007;
+    //cout << rabin_karp("sabcabcfabc", "fabc", D, mod) << ET;
+    
+    //binary search & Rabin-Karp
+    int l = 0, r = N, mid, ans = 0;
+    
+    while(l <= r){
+        mid = (l+r)>>1;
+        bool chk = false;
+        int res = 0;
+        
+        for(int i = 0; i < N - mid + 1; i++){
+            string goal = text.substr(i, mid);
+            res = rabin_karp(text, goal, D, mod);
+            
+            if(res > 1){
+                chk = true;
+                //cout << "mid now : " << mid << ET;
+                ans = max(ans, mid);
+                break;
+            } 
+        }
+        
+        if(chk)
+            l = mid + 1;
+        else
+            r = mid - 1;
+        
+    }
+    cout << ans;
+    
+}
+

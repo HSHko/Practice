@@ -1,0 +1,91 @@
+// ===========================================
+// 20.02.18 codforces 580C - Kefa and Park
+// 
+// 
+// ===========================================
+ 
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define ET "\n"
+#define for0(i,n) for(int i = 0; i < n; i++)
+#define for1(i,n) for(int i = 1; i <= n; i++)
+#define CLR(arr) memset(arr, 0, sizeof(arr))
+#define PAIR pair<int, int>
+const int bz = 32;
+const ll INF = 1LL << 50;
+ 
+const int MAX = pow(10,5);
+bool cat[MAX+5];
+int ans = 0;
+int N, M;
+ 
+class C_node{
+public:
+    int node;
+    int cat;
+    C_node(int n){
+        node = n;
+    }
+    
+    
+};
+ 
+void BFS(vector<C_node> Gph[], int Start){
+    deque<C_node> DQ; DQ.push_back(Start);
+    int Nya[MAX+5]; CLR(Nya); Nya[Start] = 1;
+    bool chk[MAX+5]; CLR(chk);
+    
+    while(!DQ.empty()){
+        C_node Now = DQ.front(); DQ.pop_front();
+        chk[Now.node] = true;
+        
+        for(auto Next : Gph[Now.node]){
+            
+            if(!chk[Next.node]){
+                chk[Next.node] == true;
+                
+                Nya[Next.node] = Nya[Now.node]*(cat[Next.node]);
+                Nya[Next.node] += (cat[Next.node]);
+                
+                if(Nya[Next.node] <= M){
+                    if(Gph[Next.node].size() == 0){
+                        ans++;
+                        //cout << Next.node << " nchk" << ET;
+                    } 
+                    else {
+                        DQ.push_back(Next.node);
+                        //cout << Next.node << " ppap" << ET;
+                    }
+                        
+                }
+            }
+        }
+    }
+}
+ 
+ 
+ 
+int main(){
+    
+    cin >> N >> M;
+    CLR(cat);
+    
+    vector<C_node> Gph[MAX+5];
+    
+    for1(i,N){
+        bool a; cin >> a;
+        cat[i] = a;
+    }
+    
+    for1(i,N-1){
+        int a, b; cin >> a >> b;
+        if(a > b) a ^= b ^= a ^= b;
+        Gph[a].emplace_back(b);
+    }
+    
+    BFS(Gph, 1);
+    
+    cout << ans;
+}
+ 
