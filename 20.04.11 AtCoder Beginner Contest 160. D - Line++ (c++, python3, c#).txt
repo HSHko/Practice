@@ -1,0 +1,155 @@
+﻿//=========================================c++
+/* ===========================================
+// 20.04.11 AtCoder Beginner Contest 160. D - Line++ (c++, python3, c#)
+// 
+// 
+=========================================== */
+/* ===========================================
+問題文1からNまでの番号がつけられたN個の頂点を持つ無向グラフGがあります。
+Gには、以下のように合計N本の辺があります。•i=1,2,...,N−1i=1,2,...,N−1に
+ついて、頂点iと頂点i+1の間に辺があります•頂点Xと頂点Yの間に辺があります
+k=1,2,...,N−1k=1,2,...,N−1について、以下の問題を解いてください。
+
+::test input::
+5 2 4
+
+=========================================== */
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define rep(i,n) for(int (i)=1;(i)<=(n);i++)
+#define rez(i,n) for(int (i)=0;(i)<(n);i++)
+#define ET "\n"
+
+class CRun{
+private:
+    struct {
+        int N = 0;
+        int X = 0;
+        int Y = 0;
+        //unique_ptr<vector<int>[]> vec;
+    }gv;
+public:
+    CRun(){}; ~CRun(){};
+    
+    void build();
+    void solve();
+};
+
+void CRun::build(){
+    cin >> gv.N >> gv.X >> gv.Y;
+}
+
+void CRun::solve(){
+    int ans[gv.N +1]; memset(&ans, 0, sizeof(ans));
+    
+    for (int start = 1; start < gv.N; start++) {
+        for (int end = start +1; end <= gv.N; end++) {
+            int pass_1 = end - start;
+            int pass_2 = abs(gv.X - start) + abs(gv.Y - end) + 1;
+            ans[min(pass_1, pass_2)] += 1;
+        }
+    }
+    
+    rep (i, gv.N -1) {
+        cout << ans[i] << ET;
+    }
+}
+
+
+int main(){
+    CRun run;
+    run.build();
+    run.solve();
+    
+}
+
+
+
+
+
+##======================================python3
+
+import sys
+import collections
+sys.setrecursionlimit(10**6)
+
+class Run:
+
+    def build(gv):
+        gv.N, gv.X, gv.Y = map(int, sys.stdin.readline().split(' '))
+
+    def solve(gv):
+        ans = [0 for _ in range(1, gv.N+1)]
+        for start in range(1, gv.N):
+            for end in range (start +1, gv.N +1):
+                pass_1 = end - start
+                pass_2 = abs(gv.X -start) + abs(gv.Y -end) + 1
+                ans[min(pass_1, pass_2)] += 1
+        
+        for i in range(1, gv.N):
+            print(ans[i])
+
+if __name__ == '__main__':
+    run = Run()
+    run.build()
+    run.solve()
+
+
+
+
+
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+using System.Reflection;
+
+namespace NNN{
+    public class CRun{
+        private static class gv{
+            public static int N {get; set;} = 0;
+            public static int X {get; set;} = 0;
+            public static int Y {get; set;} = 0;
+        }
+    
+        public void build(){ string[] input;
+            input = IC._s;
+            
+            var pi = typeof(gv).GetProperties();
+            for (int i = 0; i < pi.Length; i++) {
+                pi[i].SetValue(typeof(gv), int.Parse(input[i]));
+            }
+        }
+    
+        public void solve(){ StreamWriter so = new StreamWriter(Console.OpenStandardOutput());
+            
+            var ans = new int[gv.N +2]; Array.Clear(ans, 0, ans.Length);
+            
+            for (int start = 1; start < gv.N; start++) {
+                for (int end = start + 1; end <= gv.N; end++) {
+                    var pass_1 = end - start;
+                    var pass_2 = Math.Abs(start - gv.X) + Math.Abs(end - gv.Y) +1;
+                    ans[Math.Min(pass_1, pass_2)] += 1;
+                }
+            }
+            
+            for (int i = 1; i < gv.N; i++) {
+                Console.WriteLine(ans[i]);
+            }
+        }
+    }
+
+    class Program { 
+        static void Main() { 
+            var run = new CRun();
+            run.build();
+            run.solve();
+        } 
+    }
+
+    public static class IC{
+        public static string _a{get{return Console.ReadLine();}}
+        public static string[] _s{get{return (Console.ReadLine().Split());}}
+    }
+}
