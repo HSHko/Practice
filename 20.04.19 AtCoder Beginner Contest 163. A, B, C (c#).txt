@@ -1,0 +1,196 @@
+/*******************************************c#
+* 20.04.19 AtCoder Beginner Contest 163
+*
+*
+*********************************************/
+/*********************************************
+
+::test input::
+
+*********************************************/
+
+// A - Circle Pond
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+using System.Reflection; //PropertyInfo[], GetProperties[]
+using static System.Console; using static IOmacro.CInput;
+
+namespace tempName {
+    public class CRun{
+        private static class gv{
+            public static int R;
+            public static readonly double pi = 3.1415926535897932384;
+        }
+    
+        public void build(){            
+            gv.R = _int;
+        }
+    
+        public void solve(){
+            double ans = 2*gv.pi*gv.R;
+            
+            WriteLine(ans.ToString("F20"));
+            
+        }
+    }
+
+    class Program { 
+        static void Main() { 
+            var run = new CRun();
+            run.build();
+            run.solve();
+        } 
+    }
+}
+
+namespace IOmacro {
+    public static class CInput {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split());}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split().Select(x=>int.Parse(x)).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split().Select(x=>long.Parse(x)).ToArray();}}    
+    }
+}
+
+
+
+
+
+//	B - Homework
+
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+using System.Reflection; //PropertyInfo[], GetProperties[]
+using static System.Console; using static IOmacro.CInput;
+
+namespace tempName {
+    public class CRun{
+        private static class gv{
+            public static int N;
+            public static int M;
+            public static int[] A;
+        }
+    
+        public void build(){            
+            var input = _inta;
+            gv.N = input[0];
+            gv.M = input[1];
+            gv.A = _inta;
+        }
+    
+        public void solve(){
+            int ans = gv.N;
+            
+            foreach (int x in gv.A) {
+                ans -= x;
+            }
+            
+            ans = (ans >= 0 ? ans : -1);
+            WriteLine(ans);
+        }
+    }
+
+    class Program { 
+        static void Main() { 
+            var run = new CRun();
+            run.build();
+            run.solve();
+        } 
+    }
+}
+
+namespace IOmacro {
+    public static class CInput {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split());}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split().Select(x=>int.Parse(x)).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split().Select(x=>long.Parse(x)).ToArray();}}    
+    }
+}
+
+
+
+
+
+
+
+//C - management
+
+using System; //Console, IComparable
+using System.IO; //StreamWriter 
+using System.Linq; //Select(), Where(), OrderBy(), Count()
+using System.Collections.Generic; //List<T>
+using System.Reflection; //PropertyInfo[], GetProperties[]
+using static System.Console; using static IOmacro.CInput;
+
+namespace tempName {
+    public class CRun{
+        private static class gv{
+            public static int N;
+            public static int[] A;
+            
+            public static int[] pin;
+            public static int[] pout;
+            public static List<int>[] gph;
+            
+            public static int[] cnt;
+        }
+    
+        public void build(){            
+            gv.N = _int;
+            gv.A = _inta;
+        }
+        
+        int order = 0;
+        public void dfs(int p) {
+            gv.pin[p] = ++order;
+            foreach (var x in gv.gph[p]) dfs(x);
+            gv.pout[p] = order;
+            WriteLine($"{p}, {gv.pin[p]}, {gv.pout[p]}");
+        }
+        
+        public void solve(){
+            
+            
+            gv.cnt = new int[gv.N+2];
+            
+            foreach (var x in gv.A) {
+                gv.cnt[x]++;
+            }
+            
+            for (int i=1; i<=gv.N; i++) {
+                WriteLine(gv.cnt[i]);
+            }
+        }
+    }
+
+    class Program { 
+        static void Main() { 
+            var run = new CRun();
+            run.build();
+            run.solve();
+        } 
+    }
+}
+
+namespace IOmacro {
+    public static class CInput {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split());}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split().Select(x=>int.Parse(x)).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split().Select(x=>long.Parse(x)).ToArray();}}    
+    }
+}
