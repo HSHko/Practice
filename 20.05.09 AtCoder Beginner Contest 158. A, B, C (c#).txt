@@ -1,0 +1,154 @@
+/*********************************************
+* 20.05.09 AtCoder Beginner Contest 158. A, B, C (c#)
+* 
+*
+*********************************************/
+/*********************************************
+::test input::
+*********************************************/
+
+namespace TempName{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using static System.Console;
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+    using static IOmacro.CConst;
+    
+
+    public class CRun{
+        public readonly char problem_num = 'C';
+        
+        public void solve_1() {
+            //A. Station and Bus
+            
+            string input = _string;
+            
+            string ans = "No";
+            for (int i = 1; i < input.Length; i++) {
+                if (input[i] != input[i-1]) {
+                    ans = "Yes";
+                    break;
+                }
+            }
+            WriteLine(ans);
+        }
+        
+        public void solve_2() {
+            //B. Count Balls
+            
+            long N = cin, A = cin, B = cin;
+            
+            long x = N / (A + B);
+            long y = N % (A + B);
+            
+            long ans = 0;
+            ans += x * A;
+            ans += (y > A ? A : y);
+            WriteLine(ans);
+        }
+        
+        public void solve_3() {
+            //C - Tax Increase
+            
+            const double rate_A = 0.08;
+            const double rate_B = 0.10;
+            
+            long tax_A = cin, tax_B = cin;
+            long min = 0;
+            long max = 3700;
+            long ans = -1;
+            
+            while (min +1 < max) {
+                long temp = min + max >>1;
+                
+                
+                long chk_A = (long)(rate_A * temp);
+                long chk_B = (long)(rate_B * temp);
+                
+                if (chk_A < tax_A || chk_B < tax_B) {
+                    min = temp;
+                }
+                else {
+                    max = temp;
+                }
+            }
+            
+            if ((long)(max * rate_A) == tax_A && (long)(max * rate_B) == tax_B) {
+                WriteLine(max);
+            }
+            else {
+                WriteLine("-1");
+            }
+        }
+    }
+    
+    class Program { 
+        static void Main() { 
+            var run = new CRun();
+            if (run.problem_num == 'A') run.solve_1(); 
+            if (run.problem_num == 'B') run.solve_2(); 
+            if (run.problem_num == 'C') run.solve_3();
+        } 
+    }
+}
+
+namespace IOmacro {
+    //20.05.08. 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class CsharpInput {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class CConst {
+        public static readonly int MINI = int.MaxValue;
+        public static readonly long INF = Int64.MaxValue;
+    }
+    
+    public class CppInput {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput(){}
+        public static implicit operator string(CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class EnumerableExtension {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
