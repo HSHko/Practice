@@ -1,0 +1,116 @@
+/*********************************************
+* 
+* 
+* 
+*********************************************/
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define rep(i,n) for(int (i)=1;(i)<=(n);i++)
+#define rez(i,n) for(int (i)=0;(i)<(n);i++)
+#define et "\n"
+
+class CRun {
+private:
+    void IOfaster();
+public:
+    const char problem_num = 'A';
+    
+    CRun(){
+    }; 
+    ~CRun(){};
+    void build();
+    void solveA(); void solveB(); void solveC(); 
+    void solveD(); void solveE(); void solveF();
+};
+
+void CRun::IOfaster(){
+    ios::sync_with_stdio(0); cin.tie(NULL);
+}
+
+/*********************************************
+20.05.30. codeforces 231A - Team (800)
+
+http://codeforces.com/problemset/problem/231/A
+
+One day, three best friends Petya, Vasya and Tonya dcided to form a team and
+take part in programming contests. Paricipants are usally offered several problems
+during programming contests. Long before the start the friends decided that they
+will implement a problem if at least two of them are sure about the solution.
+Otherwise, the friends won't write the problem's solution.
+
+This contest offers n problems to the participants.
+ex : n
+for each problem we know, which friend is sure about the solution.
+ex : 0 1 0
+help the friends find the number of problmes for which they will write a solution.
+
+
+
+*********************************************/
+void CRun::solveA(){
+    int problem_num; cin >> problem_num;
+    const int friend_num = 3;
+    const int need_cnt = 2;
+    
+    int ans = 0;
+    while (problem_num-- > 0) {
+        int sure_cnt = 0;
+        for (int ix = 0; ix < friend_num; ix++) {
+            int input; cin >> input;
+            if (input > 0) sure_cnt++;
+        }
+        if (sure_cnt >= need_cnt) ans += 1;
+    }
+    cout << ans;
+}
+
+/*********************************************
+
+*********************************************/
+void CRun::solveB(){
+    
+}
+
+/*********************************************
+
+*********************************************/
+void CRun::solveC(){
+    
+}
+
+/*********************************************
+
+*********************************************/
+void CRun::solveD(){
+    
+}
+
+/*********************************************
+
+*********************************************/
+void CRun::solveE(){
+    
+}
+
+/*********************************************
+
+*********************************************/
+void CRun::solveF(){
+    
+}
+
+
+int main(){
+    CRun run;
+    switch (run.problem_num) {
+        case 'A' : run.solveA();
+        case 'B' : run.solveB();
+        case 'C' : run.solveC();
+        case 'D' : run.solveD();
+        case 'E' : run.solveE();
+        case 'F' : run.solveF();
+    }
+}
+
