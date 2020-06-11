@@ -1,0 +1,186 @@
+/*********************************************
+* c++ template
+* 
+*********************************************/
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define et "\n"
+
+const int PROBLEM_NUM = 1;
+
+/*********************************************
+20.06.12 AtCoder Beginner Contest 151. D - Maze Master
+
+壁と通路が存在する２次元の迷路がある。
+出発点と到着点を任意設定できるとき、
+最大移動距離は？
+
+*********************************************/
+struct gv
+{
+    int h;
+    int w;
+    unique_ptr<unique_ptr <char[]>[]> arrMap;
+    unique_ptr<unique_ptr <int[]>[]> arrChk;
+}gv;
+
+void init()
+{
+    cin >> gv.h;
+    cin >> gv.w;
+    gv.arrMap = make_unique<unique_ptr<char[]>[]>(gv.h);
+    gv.arrChk = make_unique<unique_ptr<int[]>[]>(gv.h);
+    for (int iy = 0; iy < gv.h; iy++)
+    {
+        gv.arrMap[iy] = make_unique<char[]>(gv.w);
+        gv.arrChk[iy] = make_unique<int[]>(gv.w);
+    }
+    
+    for (int iy = 0; iy < gv.h; iy++)
+    {
+        string input;
+        cin >> input;
+        int sLen = input.length();
+        for(int ix = 0; ix < sLen; ix++)
+        {
+            gv.arrMap[iy][ix] = input[ix];
+        }
+    }
+}
+
+struct point
+{
+    int y, x, z;
+};
+
+bool isPassable(int cy, int cx)
+{
+    if (0 <= cy && cy < gv.h &&
+        0 <= cx && cx < gv.w)
+    {
+        if (gv.arrMap[cy][cx] == '.')
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int BFS(queue<point> &que, int chkVisitation)
+{
+    int res = 0;
+    while (!que.empty())
+    {
+        point now = que.front();
+        que.pop();
+        
+        if (gv.arrChk[now.y][now.x] == chkVisitation)
+            continue;
+            
+        gv.arrChk[now.y][now.x] = chkVisitation;
+        
+        for (int i = 0; i < 4; i++)
+        {
+            int ny = now.y + "1120"[i] - '1';
+            int nx = now.x + "2011"[i] - '1';
+            
+            if (isPassable(ny, nx) == false)
+                continue;
+            if (gv.arrChk[ny][nx] == chkVisitation)
+                continue;
+            
+            que.push(point{ny, nx, now.z + 1});
+            res = max(res, now.z + 1);
+        }
+    }
+    return res;
+}
+
+void proc()
+{
+    queue<point> que;
+    int chkVisitation = 0;
+    int maxDistToExit = 0;
+    for (int iy = 0; iy < gv.h; iy++)
+    {
+        for (int ix = 0; ix < gv.w; ix++)
+        {
+            if (gv.arrMap[iy][ix] == '.')
+            {
+                que.push((point){iy, ix, 0});
+                chkVisitation++;
+                maxDistToExit = max(maxDistToExit, BFS(que, chkVisitation));
+            }
+        }
+    }
+    
+    cout << maxDistToExit << et;
+}
+
+void solve1()
+{
+    init();
+    proc();
+}
+
+/*********************************************
+
+*********************************************/
+void solve2()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve3()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve4()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve5()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve6()
+{
+    
+}
+
+void IOfaster()
+{
+    ios::sync_with_stdio(0); cin.tie(NULL);
+}
+
+int main()
+{
+    switch (PROBLEM_NUM) 
+    {
+        case 1 : solve1();
+        case 2 : solve2();
+        case 3 : solve3();
+        case 4 : solve4();
+        case 5 : solve5();
+        case 6 : solve6();
+    }
+}
+
+
