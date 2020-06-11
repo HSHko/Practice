@@ -1,0 +1,116 @@
+/*********************************************
+* c++ template
+* 
+*********************************************/
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define et "\n"
+
+const int PROBLEM_NUM = 1;
+
+/*********************************************
+20.06.11 AtCoder Beginner Contest 151. C - Welcome to AtCoder
+N問の問題がある
+M回の提出で、正解数とペナルティは？
+*********************************************/
+void solve1()
+{
+    int numProbs;
+    cin >> numProbs;
+    int numSubmits;
+    cin >> numSubmits;
+    
+    bool arrFlagAC[numProbs + 1];
+    memset(&arrFlagAC, 0, sizeof(arrFlagAC));
+    int arrCntWA[numProbs + 1];
+    memset(&arrCntWA, 0, sizeof(arrCntWA));
+    int cntAC = 0;
+    int cntWA = 0;
+    
+    while (numSubmits-- > 0)
+    {
+        int p; 
+        cin >> p;
+        string submitResult;
+        cin >> submitResult;
+        if (arrFlagAC[p] == true)
+        {
+            continue;
+        }
+        if (submitResult == "AC")
+        {
+            arrFlagAC[p] = true;
+            cntAC++;
+            cntWA += arrCntWA[p];
+            continue;
+        }
+        if (submitResult == "WA")
+        {
+            arrCntWA[p]++;
+        }
+    }
+    
+    cout << cntAC << " " << cntWA << et;
+}
+
+/*********************************************
+
+*********************************************/
+void solve2()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve3()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve4()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve5()
+{
+    
+}
+
+/*********************************************
+
+*********************************************/
+void solve6()
+{
+    
+}
+
+void IOfaster()
+{
+    ios::sync_with_stdio(0); cin.tie(NULL);
+}
+
+int main()
+{
+    switch (PROBLEM_NUM) 
+    {
+        case 1 : solve1();
+        case 2 : solve2();
+        case 3 : solve3();
+        case 4 : solve4();
+        case 5 : solve5();
+        case 6 : solve6();
+    }
+}
+
+
