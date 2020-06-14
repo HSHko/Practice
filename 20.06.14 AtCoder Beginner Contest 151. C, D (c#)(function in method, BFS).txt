@@ -1,0 +1,274 @@
+/*********************************************
+* c# template
+* 20.06.14 AtCoder Beginner Contest 151. C, D (c#)
+*********************************************/
+
+namespace TempName{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro._CSharpInput; 
+    using static IOmacro._CppInput;
+    
+    public class _CRun{
+        public readonly int PROBLEM_NUM = 2;
+
+/*********************************************
+C - Welcome to AtCoder
+
+N問の問題がある
+M回の提出で、正解数とペナルティは？
+
+test input :
+2 5
+1 WA
+1 AC
+2 WA
+2 AC
+2 WA
+*********************************************/            
+        public void solve1()
+        {
+            int numProb = cin;
+            int numQry = cin;
+            
+            var arrCntWA = new int[numProb + 1];
+            
+            int cntAC = 0;
+            int cntWA = 0;
+            
+            while (numQry-- > 0) {
+                int inNum = cin;
+                string inStr = cin;
+                
+                if (arrCntWA[inNum] == -1) {    // 이미 AC된 경우
+                    continue;
+                }
+                else if (inStr == "AC") {
+                    cntAC += 1;
+                    cntWA += arrCntWA[inNum];
+                    arrCntWA[inNum] = -1;
+                }
+                else {
+                    arrCntWA[inNum] += 1;
+                }
+            }
+            
+            WriteLine($"{cntAC} {cntWA}");
+        }
+
+/*********************************************
+D - Maze Master
+
+壁と通路が存在する２次元の迷路がある。
+出発点と到着点を任意設定できるとき、
+最大移動距離は？
+
+test input:
+3 5
+...#.
+.#.#.
+.#...
+*********************************************/   
+        
+        public struct _SPoint
+        {
+            public int y, x, d;
+            public _SPoint(int y, int x, int d)
+            {
+                this.y = y;
+                this.x = x;
+                this.d = d;
+            }
+        }
+        
+        public struct _SMapMembers
+        {
+            public int h, w;
+            public char[,] arrMap;
+            public int[,] arrChkVisit;
+            public Queue<_SPoint> initQue;
+        } _SMapMembers gv;
+        
+        public void init2()
+        {
+            gv.h = cin;
+            gv.w = cin;
+            gv.arrMap = new char[gv.h, gv.w];
+            gv.arrChkVisit = new int[gv.h, gv.w];
+            
+            var que = new Queue<_SPoint>();
+            for (int iy = 0; iy < gv.h; iy++) {
+                string inStr = _string;
+                for (int ix = 0; ix < gv.w; ix++) {
+                    gv.arrMap[iy, ix] = inStr[ix];
+                    if (inStr[ix] == '.') {
+                        que.Enqueue(new _SPoint(iy, ix, 0));
+                    }
+                }
+            }
+            
+            gv.initQue = new Queue<_SPoint>(que);
+        }
+        
+        int BFS(_SPoint start)
+        {
+            int res = 0;
+            
+            var que = new Queue<_SPoint>();
+            que.Enqueue(start);
+            
+            Func<int, int, bool> isInArea = (fy, fx) => 
+            {
+                if (0 <= fy && fy < gv.h && 0 <= fx && fx < gv.w) {
+                    if (gv.arrMap[fy, fx] == '.') {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            
+            Array.Clear(gv.arrChkVisit, 0, gv.arrChkVisit.Length);
+            while (que.Any()) {
+                var now = que.Dequeue();
+                gv.arrChkVisit[now.y, now.x] += 1;
+                
+                for (int i = 0; i < 4; i++) {
+                    int ny = now.y + "1120"[i] - '1';
+                    int nx = now.x + "2011"[i] - '1';
+                    
+                    if (isInArea(ny, nx) == false)
+                        continue;
+                    if (gv.arrChkVisit[ny, nx] != 0)
+                        continue;
+                        
+                    gv.arrChkVisit[ny, nx] += 1;
+                    que.Enqueue(new _SPoint(ny, nx, now.d + 1));
+                    res = Math.Max(res, now.d + 1);
+                }
+                
+            }
+            
+            return res;
+        }
+        
+        public void proc2()
+        {
+            int longestPath = 0;
+            while (gv.initQue.Any()) {
+                var start = gv.initQue.Dequeue();
+                longestPath = Math.Max(longestPath, BFS(start));
+            }
+            
+            WriteLine(longestPath);
+        }
+        
+        public void solve2()
+        {
+            init2();
+            proc2();
+        }
+
+/*********************************************
+
+*********************************************/            
+        public void solve3()
+        {
+            
+        }
+
+/*********************************************
+
+*********************************************/            
+        public void solve4()
+        {
+            
+        }
+
+/*********************************************
+
+*********************************************/            
+        public void solve5()
+        {
+            
+        }
+
+/*********************************************
+
+*********************************************/            
+        public void solve6()
+        {
+            
+        }
+    }
+
+    class Program { 
+        static void Main() { 
+            var run = new _CRun();
+            switch (run.PROBLEM_NUM) {
+                case 1: run.solve1(); break;
+                case 2: run.solve2(); break;
+                case 3: run.solve3(); break;
+                case 4: run.solve4(); break;
+                case 5: run.solve5(); break;
+                case 6: run.solve6(); break;
+            }
+        } 
+    }
+}
+
+namespace IOmacro {
+    //20.05.10. 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class _CSharpInput {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class _CppInput {
+        public static _CppInput cin => new _CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private _CppInput(){}
+        public static implicit operator string(_CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(_CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(_CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(_CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class _CEnumerableExtension {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
