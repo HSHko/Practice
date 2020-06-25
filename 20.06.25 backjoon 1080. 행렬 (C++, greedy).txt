@@ -1,0 +1,121 @@
+/*********************************************
+* c++ template
+* 
+*********************************************/
+#include <bits/stdc++.h>
+using namespace std;
+#define et "\n"
+
+/*********************************************
+20.06.25 backjoon 1080. 행렬 (C++, greedy)
+
+0과 1로만 이루어진 행렬 A와 행렬 B가 있다. 이때, 행렬 A를 행렬 B로 
+바꾸는데 필요한 연산의 횟수의 최솟값을 구하는 프로그램을 작성하시오.
+
+행렬을 변환하는 연산은 어떤 3*3크기의 부분 행렬에 있는 모든 원소를 
+뒤집는 것이다. (0 -> 1, 1 -> 0)
+
+첫째 줄에 행렬의 크기 N M이 주어진다. N과 M은 50보다 작거나 같은 
+자연수이다. 둘째 줄부터 N개의 줄에는 행렬 A가 주어지고, 그 다음줄부터
+N개의 줄에는 행렬 B가 주어진다.
+
+test input:
+3 4
+0000
+0010
+0000
+1001
+1011
+1001
+
+방법 :
+각 행렬의 최좌상단을 순차적으로 뒤집는다.
+
+*********************************************/
+class Cbackjoon1080
+{
+private:
+    int h_ = 0;
+    int w_ = 0;
+    
+    static constexpr int NMAX = 51;
+    int matA_[NMAX][NMAX];
+    int matB_[NMAX][NMAX];
+    int matChk_[NMAX][NMAX];
+    
+    static constexpr int PATTERN_SIZE = 3;
+
+public:
+    void init()
+    {
+        cin >> h_;
+        cin >> w_;
+        
+        for (int iy = 0; iy < h_; iy++) {
+            string input;
+            cin >> input;
+            for (int ix = 0; ix < w_; ix++) {
+                matA_[iy][ix] = input[ix] - '0';
+            }
+        }
+        
+        for (int iy = 0; iy < h_; iy++) {
+            string input;
+            cin >> input;
+            for (int ix = 0; ix < w_; ix++) {
+                matB_[iy][ix] = input[ix] - '0';
+            }
+        }
+    }
+    
+    void proc()
+    {
+        int cntReversed = 0;
+        
+        for (int iy = 0; iy < h_; iy++) {
+            for (int ix = 0; ix < w_; ix++) {
+                matChk_[iy][ix] = (matA_[iy][ix] != matB_[iy][ix] ? 1 : 0);
+            }
+        }
+        
+        auto reversePattern = [&](auto fy, auto fx)
+        {
+            for (int iy = fy; iy < fy + PATTERN_SIZE; iy++) {
+                for (int ix = fx; ix < fx + PATTERN_SIZE; ix++) {
+                    matA_[iy][ix] ^= 1;
+                    matChk_[iy][ix] ^= 1;
+                }
+            }
+        };
+        
+        for (int iy = 0; iy < h_ - PATTERN_SIZE + 1; iy++) {
+            for (int ix = 0; ix < w_ - PATTERN_SIZE + 1; ix++) {
+                if (matChk_[iy][ix] == 1) {
+                    reversePattern(iy, ix);
+                    cntReversed += 1;
+                }
+            }
+        }
+        
+        for (int iy = 0; iy < h_; iy++) {
+            for (int ix = 0; ix < w_; ix++) {
+                if (matA_[iy][ix] != matB_[iy][ix]) {
+                    cout << "-1" << et;
+                    return;
+                }
+            }
+        }
+        
+        cout << cntReversed << et;
+    }
+};
+
+
+int main()
+{
+    Cbackjoon1080 run;
+    run.init();
+    run.proc();
+}
+
+
