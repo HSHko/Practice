@@ -1,0 +1,65 @@
+/*********************************************
+* c++ template
+* 
+*********************************************/
+#include <bits/stdc++.h>
+using namespace std;
+#define et "\n"
+
+/*********************************************
+20.06.29 backjoon 1912. 연속합 (C++, dp)
+
+주어진 수의 연속되는 수의 최대합은?
+
+접근방법:
+dp
+
+test input:
+10
+10 -4 3 1 5 6 -35 12 21 -1
+*********************************************/
+
+struct Parameter
+{
+    int numInput;
+    unique_ptr<int[]> arrInput;
+};
+
+void init(Parameter &para)
+{
+    cin >> para.numInput;
+    para.arrInput = make_unique<int[]>(para.numInput + 1);
+    for (int ix = 1; ix <= para.numInput; ix++) {
+        cin >> para.arrInput[ix];
+    }
+    
+}
+
+void proc(Parameter &para)
+{
+    long dp[para.numInput + 1];
+    
+    dp[1] = para.arrInput[1];
+    long maxSum = dp[1];
+    
+    for (int ix = 2; ix <= para.numInput; ix++) {
+        dp[ix] = dp[ix - 1] + para.arrInput[ix];
+        if (para.arrInput[ix] > dp[ix]) {
+            dp[ix] = para.arrInput[ix];
+        }
+        
+        maxSum = max(maxSum, dp[ix]);
+    }
+    
+    cout << maxSum << et;
+}
+
+
+int main()
+{
+    Parameter para;
+    init(para);
+    proc(para);
+}
+
+
