@@ -1,0 +1,187 @@
+/*********************************************
+* c# template
+* 
+*********************************************/
+/*********************************************
+20.07.03 backjoon 1034. 램프 (C#, hash)
+
+지민이는 각 칸마다 (1*1크기의 정사각형) 램프가 들어있는 직사각형 모양의 탁자를 
+샀다. 모든 램프는 켜져있거나 꺼져있다. 각 열의 아래에는 스위치가 하나씩 달려있
+는데, 이 스위치를 누를 때마다 그 열에 있는 램프의 상태가 바뀐다. (켜져있는 램
+프는 꺼지고, 꺼져있는 램프는 켜진다)
+
+만약 어떤 행에 있는 램프가 모두 켜져있을 때, 그 행이 켜져있다고 말한다. 지민이
+는 스위치를 K번 누를 것이다. 서로다른 스위치 K개를 누르지 않아도 된다. 지민이
+는 스위치를 K번 눌러서 켜져있는 행을 최대로 하려고 한다.
+
+지민이의 탁자에 있는 램프의 상태와 K가 주어졌을 때, 스위치를 K번 누른 후에 켜
+져있는 행의 최댓값을 구하는 프로그램을 작성하시오.
+
+첫째 줄에 N과 M이 주어진다. N은 행의 개수이고, M은 열의 개수이다. N과 M은 50보
+다 작거나 같은 자연수이다. 둘째 줄부터 N개의 줄에는 램프의 상태가 주어진다. 1
+이 켜져있는 상태이고, 0이 꺼져있는 상태이다. 마지막 줄에는 K가 주어진다. K는 1
+,000보다 작거나 같은 자연수 또는 0이다.
+
+test input:
+3 2
+01
+10
+10
+1
+
+접근방법:
+상태가 다른 서로의 행은 서로 동시에 켜져있을 수 없다.
+
+K가 홀수일 때,
+꺼져있는 램프의 수가 홀수인 행만,
+짝수일 땐 짝수인 행만 골라서 조작한다.
+
+속도향상을 위해 hash와 정렬을 사용한다.
+
+*********************************************/
+
+namespace temp_name
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+
+    public class Run
+    {
+        private struct Parameter
+        {
+            public int h_;
+            public int w_;
+            public string[] arrArea;
+            public int numRun;
+        }
+        
+        private void init(ref Parameter para)
+        {
+            para.h_ = cin;
+            para.w_ = cin;
+            para.arrArea = new string[para.h_];
+            for (int iy = 0; iy < para.h_; iy++) {
+                para.arrArea[iy] = _string;
+            }
+            para.numRun = _int;
+        }
+        
+        private void proc(Parameter para)
+        {
+            var hashCntArea = new Dictionary<string, int>();
+            foreach (var x_ in para.arrArea) {
+                if (hashCntArea.ContainsKey(x_)) {
+                    hashCntArea[x_] += 1;
+                }
+                else {
+                    hashCntArea[x_] = 1;
+                }
+            }
+            
+            var orderedHashCntArea = hashCntArea.OrderByDescending(x => x.Value);
+            
+            var numMost = 0;
+            foreach (var x_ in orderedHashCntArea) {
+                int cntOff = 0;
+                for (int ix = 0; ix < x_.Key.Length; ix++) {
+                    if (x_.Key[ix] == '0')
+                        cntOff += 1;
+                }
+                
+                //WriteLine($"{x_.Key} {x_.Value} {"go"} {cntOff} {cntOff & 1} {para.numRun & 1}");
+                if ((cntOff & 1) != (para.numRun & 1)) {
+                    continue;
+                }
+                if (cntOff > para.numRun) {
+                    continue;
+                }
+                
+                numMost = x_.Value;
+                break;
+            }
+            
+            WriteLine(numMost);
+        }
+        
+        public void work()
+        {
+            var para = new Parameter();
+            init(ref para);
+            proc(para);
+        }
+    }
+}
+
+
+class program
+{
+    static void Main()
+    {
+        var run = new temp_name.Run();
+        run.work();
+    }
+}
+
+
+namespace IOmacro
+{
+    //20.06.29 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class CsharpInput 
+    {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class CppInput 
+    {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput(){}
+        public static implicit operator string(CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class CEnumerableExtension 
+    {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
