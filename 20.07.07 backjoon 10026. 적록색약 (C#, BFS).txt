@@ -1,0 +1,207 @@
+/*********************************************
+* c# template
+* 
+*********************************************/
+/*********************************************
+20.07.07 backjoon 10026. 적록색약 (C#, BFS)
+
+문제
+적록색약은 빨간색과 초록색의 차이를 거의 느끼지 못한다. 따라서, 적록색약인 사람
+이 보는 그림은 아닌 사람이 보는 그림과는 좀 다를 수 있다.
+
+크기가 N×N인 그리드의 각 칸에 R(빨강), G(초록), B(파랑) 중 하나를 색칠한 그림이
+있다. 그림은 몇 개의 구역으로 나뉘어져 있는데, 구역은 같은 색으로 이루어져 있다.
+또, 같은 색상이 상하좌우로 인접해 있는 경우에 두 글자는 같은 구역에 속한다. (색
+상의 차이를 거의 느끼지 못하는 경우도 같은 색상이라 한다)
+
+예를 들어, 그림이 아래와 같은 경우에
+
+RRRBB
+GGBBB
+BBBRR
+BBRRR
+RRRRR
+적록색약이 아닌 사람이 봤을 때 구역의 수는 총 4개이다. (빨강 2, 파랑 1, 초록 1)
+하지만, 적록색약인 사람은 구역을 3개 볼 수 있다. (빨강-초록 2, 파랑 1)
+
+그림이 입력으로 주어졌을 때, 적록색약인 사람이 봤을 때와 아닌 사람이 봤을 때 구
+역의 수를 구하는 프로그램을 작성하시오.
+
+입력
+첫째 줄에 N이 주어진다. (1 ≤ N ≤ 100)
+
+둘째 줄부터 N개 줄에는 그림이 주어진다.
+
+출력
+적록색약이 아닌 사람이 봤을 때의 구역의 개수와 적록색약인 사람이 봤을 때의 구역
+의 수를 공백으로 구분해 출력한다.
+
+test input:
+5
+RRRBB
+GGBBB
+BBBRR
+BBRRR
+RRRRR
+*********************************************/
+
+namespace temp_name
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+
+    public class Run
+    {
+        private int h_;
+        private char[,] matMap;
+        private char[,] matMapBlind;
+        
+        private struct Point
+        {
+            public int y_, x_;
+        }
+        
+        private void init()
+        {
+            h_ = cin;
+            matMap = new char[h_, h_];
+            matMapBlind = new char[h_, h_];
+            for (int iy = 0; iy < h_; iy++) {
+                string s = _string;
+                for( int ix = 0; ix < h_; ix++) {
+                    matMap[iy, ix] = s[ix];
+                    matMapBlind[iy, ix] = s[ix];
+                    if (matMapBlind[iy, ix] == 'G')
+                        matMapBlind[iy, ix] = 'R';
+                }
+            }
+        }
+        
+        private void BFS(char[,] matMapTest)
+        {
+            var matVisited = new bool[h_, h_];
+            var cntArea = 0;
+            
+            for (int iy = 0; iy < h_; iy++) {
+                for (int ix = 0; ix < h_; ix++) {
+                    var que = new Queue<Point>();
+                    que.Enqueue(new Point{y_ = iy, x_ = ix});
+                    
+                    if (matVisited[iy, ix] == false) {
+                        matVisited[iy, ix] = true;
+                        cntArea += 1;
+                    }
+                    
+                    while (que.Any()) {
+                        var now = que.Dequeue();
+                        
+                        for (int i = 0; i < 4; i++) {
+                            var ny = now.y_ + "2011"[i] - '1';
+                            var nx = now.x_ + "1120"[i] - '1';
+                            
+                            if (!(0 <= ny && ny < h_ && 0 <= nx && nx < h_))
+                                continue;
+                            if (matVisited[ny, nx] == true)
+                                continue;
+                            if (matMapTest[ny, nx] != matMapTest[iy, ix])
+                                continue;
+                            
+                            matVisited[ny, nx] = true;
+                            //WriteLine($"{matMapTest[ny, nx]} {matMapTest[iy, ix]} {ny} {nx}");
+                            que.Enqueue(new Point{y_ = ny, x_ = nx});
+                        }
+                    }
+                }
+            }
+            
+            Write(cntArea);
+        }
+        
+        private void proc()
+        {
+            BFS(matMap);
+            Write(" ");
+            BFS(matMapBlind);
+        }
+        
+        public void work()
+        {
+            init();
+            proc();
+        }
+        
+    }
+}
+
+class program
+{
+    static void Main()
+    {
+        var run = new temp_name.Run();
+        run.work();
+    }
+}
+
+
+namespace IOmacro
+{
+    //20.06.29 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class CsharpInput 
+    {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class CppInput 
+    {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput(){}
+        public static implicit operator string(CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class CEnumerableExtension 
+    {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
