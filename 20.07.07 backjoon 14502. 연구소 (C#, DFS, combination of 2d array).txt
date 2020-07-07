@@ -1,0 +1,265 @@
+/*********************************************
+* c# template
+* 
+*********************************************/
+/*********************************************
+20.07.07 backjoon 14502. 연구소 (C#, DFS, combination of 2d array)
+
+인체에 치명적인 바이러스를 연구하던 연구소에서 바이러스가 유출되었다. 다행히 
+바이러스는 아직 퍼지지 않았고, 바이러스의 확산을 막기 위해서 연구소에 벽을 세
+우려고 한다.
+
+연구소는 크기가 N×M인 직사각형으로 나타낼 수 있으며, 직사각형은 1×1 크기의 정
+사각형으로 나누어져 있다. 연구소는 빈 칸, 벽으로 이루어져 있으며, 벽은 칸 하
+나를 가득 차지한다. 
+
+일부 칸은 바이러스가 존재하며, 이 바이러스는 상하좌우로 인접한 빈 칸으로 모두
+퍼져나갈 수 있다. 새로 세울 수 있는 벽의 개수는 3개이며, 꼭 3개를 세워야 한다.
+
+예를 들어, 아래와 같이 연구소가 생긴 경우를 살펴보자.
+2 0 0 0 1 1 0
+0 0 1 0 1 2 0
+0 1 1 0 1 0 0
+0 1 0 0 0 0 0
+0 0 0 0 0 1 1
+0 1 0 0 0 0 0
+0 1 0 0 0 0 0
+이때, 0은 빈 칸, 1은 벽, 2는 바이러스가 있는 곳이다. 아무런 벽을 세우지 않는다
+면, 바이러스는 모든 빈 칸으로 퍼져나갈 수 있다.
+
+2행 1열, 1행 2열, 4행 6열에 벽을 세운다면 지도의 모양은 아래와 같아지게 된다.
+
+2 1 0 0 1 1 0
+1 0 1 0 1 2 0
+0 1 1 0 1 0 0
+0 1 0 0 0 1 0
+0 0 0 0 0 1 1
+0 1 0 0 0 0 0
+0 1 0 0 0 0 0
+바이러스가 퍼진 뒤의 모습은 아래와 같아진다.
+
+2 1 0 0 1 1 2
+1 0 1 0 1 2 2
+0 1 1 0 1 2 2
+0 1 0 0 0 1 2
+0 0 0 0 0 1 1
+0 1 0 0 0 0 0
+0 1 0 0 0 0 0
+벽을 3개 세운 뒤, 바이러스가 퍼질 수 없는 곳을 안전 영역이라고 한다. 위의 지도
+에서 안전 영역의 크기는 27이다.
+
+연구소의 지도가 주어졌을 때 얻을 수 있는 안전 영역 크기의 최댓값을 구하는 프로
+그램을 작성하시오
+
+첫째 줄에 지도의 세로 크기 N과 가로 크기 M이 주어진다. (3 ≤ N, M ≤ 8)
+
+둘째 줄부터 N개의 줄에 지도의 모양이 주어진다. 0은 빈 칸, 1은 벽, 2는 바이러스가
+있는 위치이다. 2의 개수는 2보다 크거나 같고, 10보다 작거나 같은 자연수이다.
+빈 칸의 개수는 3개 이상이다.
+
+test input:
+7 7
+2 0 0 0 1 1 0
+0 0 1 0 1 2 0
+0 1 1 0 1 0 0
+0 1 0 0 0 0 0
+0 0 0 0 0 1 1
+0 1 0 0 0 0 0
+0 1 0 0 0 0 0
+
+접근 방법:
+N과 M의 숫자가 작으므로, 벽을 세우는 경우에 대해 모든 경우를 탐색한다.
+벽을 세우는 nCr의 모든 경우에 대해서는,
+최단거리가 아니므로 메모리를 고려해 DFS로 바이러스의 최소값을 구한다.
+
+*********************************************/
+
+namespace temp_name
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+
+    public class Run
+    {
+        readonly int ID_EMPTY = 0;
+        readonly int ID_WALL = 1;
+        readonly int ID_VIRUS = 2;
+        readonly int ID_NEW_WALL = 3;
+        readonly int ID_VISITED = 4;
+        
+        private struct Point
+        {
+            public int y_, x_, d_;
+        }
+        private int row;
+        private int col;
+        private int[,] matMap;
+        private int[,] matCopyMap;
+        private List<Point> listVirus = new List<Point>();
+        
+        readonly int NUM_NEW_WALL = 3;
+        private int maxSafeArea = 0;
+        private int cntWalls = 0;
+        
+        private void init()
+        {
+            row = cin;
+            col = cin;
+            
+            matMap = new int[row, col];
+            matCopyMap = new int[row, col];
+            for (int iy = 0; iy < row; iy++) {
+                for (int ix = 0; ix < col; ix++) {
+                    matMap[iy, ix] = cin;
+                    if (matMap[iy, ix] == ID_VIRUS)
+                        listVirus.Add(new Point{y_ = iy, x_ = ix, d_ = 0});
+                    if (matMap[iy, ix] == ID_WALL)
+                        cntWalls += 1;
+                }
+            }
+        }
+        
+        private void virusSpread()
+        {
+            int cntViruses = 0;
+            matCopyMap = (int[,]) matMap.Clone();
+            
+            foreach (var start in listVirus) {
+                var stk = new Stack<Point>();
+                stk.Push(start);
+                
+                while(stk.Any()) {
+                    var cur = stk.Pop();
+                    
+                    if (matCopyMap[cur.y_, cur.x_] != ID_VISITED) {
+                        cntViruses += 1;
+                        matCopyMap[cur.y_, cur.x_] = ID_VISITED;
+                    }
+                    
+                    for (int i = 0; i < 4; i++) {
+                        int ny = cur.y_ + "2011"[i] - '1';
+                        int nx = cur.x_ + "1120"[i] - '1';
+                        
+                        if (!(0 <= ny && ny < row && 0 <= nx && nx < col))
+                            continue;
+                        if (matCopyMap[ny, nx] != ID_EMPTY)
+                            continue;
+                        
+                        matCopyMap[ny, nx] = ID_VISITED;
+                        stk.Push(new Point{y_ = ny, x_ = nx, d_ = cur.d_ + 1});
+                        cntViruses += 1;
+                    }
+                }
+            }
+            
+            maxSafeArea = Math.Max(maxSafeArea, row * col - cntViruses - cntWalls - NUM_NEW_WALL);
+        }
+        
+        private void makeWall(int cnt, int next)
+        {
+            
+            if (cnt == NUM_NEW_WALL) {
+                virusSpread();
+                return;
+            }
+            
+            for (int p = next; p < row * col; p++) {
+                int cy = p / col;
+                int cx = p % col;
+                
+                if (matMap[cy, cx] != ID_EMPTY)
+                    continue;
+                
+                matMap[cy, cx] = ID_NEW_WALL;
+                makeWall(cnt + 1, next + 1);
+                matMap[cy, cx] = ID_EMPTY;
+            }
+        }
+        
+        private void proc()
+        {
+            makeWall(0, 0);
+            WriteLine(maxSafeArea);
+        }
+        
+        public void work()
+        {
+            init();
+            proc();
+        }
+        
+    }
+}
+
+
+class program
+{
+    static void Main()
+    {
+        var run = new temp_name.Run();
+        run.work();
+    }
+}
+
+
+namespace IOmacro
+{
+    //20.06.29 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class CsharpInput 
+    {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class CppInput 
+    {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput(){}
+        public static implicit operator string(CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class CEnumerableExtension 
+    {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
