@@ -1,0 +1,211 @@
+/*********************************************
+* c# template
+* 
+*********************************************/
+/*********************************************
+20.07.10 backjoon 2651. 자동차경주대회 (C#, dp, 最小燃料補給)
+
+https://www.acmicpc.net/problem/2651
+
+문제
+전국 자동차 경주 대회가 매년 열리고 있다. 이 대회에서는 출발지점부터 도착지점까
+지 거리가 워낙 멀기 때문에 경주 도중에 각 자동차는 정비소를 방문하여 정비를 받
+아야 한다. 정비소들은 출발지점에서 도착지점으로 가는 길가에 있으며 ①번부터 차례
+로 번호가 붙어 있다.
+
+이 대회에서는 참가하는 선수의 안전을 위하여 정비를 받지 않고 미리 정한 거리를 
+초과하여 갈 수 없도록 규칙을 정하였다. 그리고 정비소마다 정비하는데 걸리는 정비
+시간이 서로 다를 수 있다.
+
+정비소에서 정비하는데 걸리는 시간을 가장 적게 하려고 할 때 최소 총 정비시간과 
+방문하는 정비소들을 구하는 프로그램을 작성하시오.
+
+예를 들어, 아래 그림과 같이 정비소가 5개 있고, 한 번 정비를 받고 최대 140㎞를 
+갈 수 있는 경우를 생각해 보자. 출발지점에서 정비소 ①까지의 거리가 100㎞이고, 
+정비소 ①을 방문하여 정비할 때 걸리는 시간은 5분이다.
+
+
+
+자동차가 출발지점에서 대회 규칙을 지키면서 정비소 ①, ③, ⑤를 차례대로 방문하여 
+도착지점까지 갈 수 있고, 정비소 ②, ④를 방문하여 갈 수도 있다. 정비소 ①, ③, ⑤를 
+방문하는 경우에는 16분(=5+4+7분)이 걸리는데, 이것은 정비소 ②, ④를 방문하여 걸리
+는 21분(=10+11분)보다 총 정비 시간이 적게 걸린다.
+
+입력
+첫째 줄에는 정비를 받지 않고 갈 수 있는 최대 거리가 주어진다. 둘째 줄에는 정비
+소의 개수가 입력되는데 정비소 수는 100개 이하이다. 셋째 줄에는 인접한 정비소 
+사이의 거리가 차례로 주어지는데 거리는 정비를 받지 않고 갈 수 있는 최대 거리보
+다 작거나 같고 모든 거리의 합은 231-1 이하이다. 넷째 줄에는 정비소별 정비 시간
+이 차례로 주어지는데 모든 정비 시간의 합은 231-1 이하이다. 모든 입력은 양의 정
+수이며 231-1 이하이다.
+
+출력
+첫째 줄에 정비소에서 정비하는데 걸리는 총 정비 시간을 출력한다. 둘째 줄에 방문
+하는 정비소의 개수를 출력한다. 셋째 줄에는 방문하는 정비소의 번호를 한 줄에 차
+례로 출력하며 정비소 번호 사이에 빈칸을 하나씩 넣는다. 정비소를 전혀 방문하지 
+않아도 되는 경우에 총 정비 시간은 0이고 정비소 번호는 출력하지 않는다.
+
+예제 입력
+140
+5
+100 30 100 40 50 60
+5 10 4 11 7
+
+2
+5
+1 1 1 1 1 1
+5 10 44 11 7
+
+접근방법:
+경계조건에 주의하며 dp로 해결
+*********************************************/
+
+namespace temp_name
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+
+    public class Run
+    {
+        int distMovable;
+        int numStations;
+        int[] distFromPrev;
+        int[] distFromStart;
+        int[] repairTime;
+        
+        private void init()
+        {
+            distMovable = _int;
+            numStations = _int;
+            distFromPrev = ("0 " + ReadLine()).Split().Select(int.Parse).ToArray();
+            distFromStart = (int[]) distFromPrev.Clone();
+            for (int idx = 1; idx <= numStations + 1; idx++) {
+                distFromStart[idx] += distFromStart[idx - 1];
+            }
+            repairTime = ("0 " + ReadLine() + " 0").Split().Select(int.Parse).ToArray();
+        }
+        
+        
+        private void proc()
+        {
+            var minRepairTime = Enumerable.Repeat(-1, numStations + 2).ToArray();
+            var cntRepaired = new int[numStations + 2];
+            var strVisited = new string[numStations + 2];
+            
+            minRepairTime[0] = 0;
+            
+            for (int n = 1; n <= numStations + 1; n++) {
+                for (int m = n - 1; m >= 0; m--) {
+                    if (distFromStart[n] - distFromStart[m] > distMovable)
+                        continue;
+                    if (minRepairTime[n] >= 0) {
+                        if (minRepairTime[n] <= minRepairTime[m] + repairTime[n])
+                        continue;
+                    }
+                    minRepairTime[n] = minRepairTime[m] + repairTime[n];
+                    
+                    if (n == numStations + 1) {
+                        cntRepaired[n] = cntRepaired[m];
+                        strVisited[n] = strVisited[m];
+                    }
+                    else {
+                        cntRepaired[n] = cntRepaired[m] + 1;
+                        strVisited[n] = strVisited[m] + " " + n.ToString();
+                    }
+                }
+            }
+            
+            if (minRepairTime[numStations + 1] == 0) {
+                WriteLine("0");
+                WriteLine("0");
+            }
+            else {
+                WriteLine(minRepairTime[numStations + 1]);
+                WriteLine(cntRepaired[numStations + 1]);
+                var str = strVisited[numStations + 1];
+                str = str.Substring(1, str.Length - 1);
+                WriteLine(str);
+            }
+        }
+        
+        public void work()
+        {
+            init();
+            proc();
+        }
+        
+    }
+}
+
+class program
+{
+    static void Main()
+    {
+        var run = new temp_name.Run();
+        run.work();
+    }
+}
+
+
+namespace IOmacro
+{
+    //20.06.29 수정
+    
+    using System; 
+    using System.Linq; 
+    using System.IO;
+    using System.Collections.Generic;
+    
+    public class CsharpInput 
+    {
+        public static StreamWriter _writer = new StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string{get{return Console.ReadLine();}}
+        public static string[] _stringa{get{return (Console.ReadLine().Split(separator));}}
+        public static int _int{get{return int.Parse(Console.ReadLine());}}
+        public static int[] _inta{get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long{get{return long.Parse(Console.ReadLine());}}
+        public static long[] _longa{get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}    
+        public static double _double{get{return double.Parse(Console.ReadLine());}}
+        public static double[] _doublea{get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}    
+    }
+    
+    public class CppInput 
+    {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput(){}
+        public static implicit operator string(CppInput _) {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _){
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+    
+    public static class CEnumerableExtension 
+    {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
