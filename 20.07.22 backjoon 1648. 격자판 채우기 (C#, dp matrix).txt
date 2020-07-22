@@ -1,0 +1,158 @@
+
+/* C# template********************************
+20.07.22 backjoon 1648. 격자판 채우기 (C#, dp matrix)
+
+N과 M이 주어졌을 때, 격자판을 2x1크기의 도미노로 채우는 방법의 수를 구하는 
+방법을 작성하시오. 도미노는 회전시켜 1x2크기로 채울 수 있다. 도미노로 모두 
+채웠을 때, 빈 칸이 존재하면 안 된다.
+
+입력
+첫째 줄에 격자판의 세로 크기 N과 가로 크기 M이 주어진다. (1 ≤ N, M ≤ 14)
+
+출력
+첫째 줄에 주어진 격자판을 2x1크기의 도미노로 빈 공간이 없도록 채우는 방법의 
+수를 9901로 나눈 나머지를 출력한다.
+
+예제 입력 1 
+3 6
+예제 출력 1 
+41
+
+*********************************************/
+
+
+namespace temp_name
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+    using static System.Console;
+    using static IOmacro.CsharpInput;
+    using static IOmacro.CppInput;
+
+    public class Run
+    {
+        int h_;
+        int w_;
+        int end_;
+        int[,] dp;
+        
+        public void init()
+        {
+            h_ = cin;
+            w_ = cin;
+            end_ = h_*w_;
+            
+            dp = new int[h_*(w_+1)+2, (1<<(w_+1))+1];
+            for (int i = 0; i <= h_*(w_+1)+1; i++)
+            for (int j = 0; j <= 1<<(w_+1); j++) {
+                dp[i, j] = -1;
+            }
+            
+        }
+
+
+        private int calc(int pos, int bit) 
+        {
+            if (pos > end_)
+                return 0;
+            if (pos == end_)
+                return (bit == 0 ? 1 : 0);
+            if (dp[pos, bit] != -1)
+                return dp[pos, bit];
+            
+            if ((bit & 1) > 0) {
+                dp[pos, bit] = calc(pos+1, bit>>1);
+            } else {
+                dp[pos, bit] = calc(pos+1, bit>>1 | 1<<(w_-1) );
+                
+                if (pos%w_ != w_-1 && (bit & 1<<1) == 0)
+                    dp[pos, bit] += calc(pos+2, bit>>2);
+            }
+            return dp[pos, bit]%9901;
+        }
+        
+        public void proc()
+        {
+            WriteLine(calc(0, 0));
+        }
+    }
+}
+
+class program
+{
+
+    static void Main(string[] args)
+    {
+        // var exStdIn = new System.IO.StreamReader(@"C:\Users\HAN\Desktop\VSC\input.txt"); 
+        // System.Console.SetIn(exStdIn);
+        var run = new temp_name.Run();
+        run.init();
+        run.proc();
+    }
+}
+
+
+namespace IOmacro
+{
+    //20.07.21 수정
+
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public class CsharpInput
+    {
+        public static System.IO.StreamWriter _writer = new System.IO.StreamWriter(Console.OpenStandardOutput());
+        public const char separator = ' ';
+        public static string _string { get { return Console.ReadLine(); } }
+        public static string[] _stringa { get { return (Console.ReadLine().Split(separator)); } }
+        public static int _int { get { return int.Parse(Console.ReadLine()); } }
+        public static int[] _inta { get { return Console.ReadLine().Split(separator).Select(int.Parse).ToArray(); } }
+        public static long _long { get { return long.Parse(Console.ReadLine()); } }
+        public static long[] _longa { get { return Console.ReadLine().Split(separator).Select(long.Parse).ToArray(); } }
+        public static double _double { get { return double.Parse(Console.ReadLine()); } }
+        public static double[] _doublea { get { return Console.ReadLine().Split(separator).Select(double.Parse).ToArray(); } }
+    }
+
+    public class CppInput
+    {
+        public static CppInput cin => new CppInput();
+        public const char separator = ' ';
+        private static readonly Queue<string> _input = new Queue<string>();
+        private CppInput() { }
+        public static implicit operator string(CppInput _)
+        {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return _input.Dequeue();
+        }
+        public static implicit operator int(CppInput _)
+        {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return int.Parse(_input.Dequeue());
+        }
+        public static implicit operator long(CppInput _)
+        {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return long.Parse(_input.Dequeue());
+        }
+        public static implicit operator double(CppInput _)
+        {
+            if (_input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => _input.Enqueue(x));
+            return double.Parse(_input.Dequeue());
+        }
+    }
+
+    public static class CEnumerableExtension
+    {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function)
+        {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
+
