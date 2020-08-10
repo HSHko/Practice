@@ -1,0 +1,82 @@
+
+/* C# template********************************
+
+*********************************************/
+using static IOmacro.CsharpInput; 
+using static IOmacro.CppInput;
+
+namespace temp_name {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using static System.Console; 
+    using static IOmacro.CsharpInput; 
+    using static IOmacro.CppInput;
+
+    public class Run {        
+        
+        char n_ = '5';
+        int m_ = 3;
+        
+        public void solve(string strNow, char chrNow) {
+            
+            if (strNow.Length == m_) {
+                WriteLine(strNow);
+            } else {
+                for (char next = (char)(chrNow + 1); next <= n_; next++) {
+                    solve(strNow + next, next);
+                }
+            }
+            
+        }
+        
+        public void proc() {
+            
+            solve("1", '1');
+            
+        }
+    }
+}
+
+class program {
+    static void Main(string[] args) {
+        // var exStdIn = new System.IO.StreamReader(@"C:\Users\HAN\Desktop\VSC\input.txt"); System.Console.SetIn(exStdIn);
+        var _writer = new System.IO.StreamWriter(System.Console.OpenStandardOutput()) {AutoFlush = false};
+        var run = new temp_name.Run(); System.Console.SetOut(_writer); run.proc(); System.Console.Out.Flush();
+    }
+}
+
+namespace IOmacro {
+    //20.08.10 수정
+
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public class CsharpInput {
+        private const char separator = ' ';
+        public static string _string {get{return Console.ReadLine();}} public static string[] _stringa {get{return (Console.ReadLine().Split(separator));}}
+        public static int _int {get{return int.Parse(Console.ReadLine());}} public static int[] _inta {get{return Console.ReadLine().Split(separator).Select(int.Parse).ToArray();}}
+        public static long _long {get{return long.Parse(Console.ReadLine());}} public static long[] _longa {get{return Console.ReadLine().Split(separator).Select(long.Parse).ToArray();}}
+        public static double _double {get{return double.Parse(Console.ReadLine());}} public static double[] _doublea {get{return Console.ReadLine().Split(separator).Select(double.Parse).ToArray();}}
+    }
+
+    public class CppInput {
+        public static CppInput cin => new CppInput(); private CppInput() {}
+        private const char separator = ' ';
+        private static readonly Queue<string> ___input = new Queue<string>();
+        public static implicit operator string(CppInput _) {if (___input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => ___input.Enqueue(x)); return ___input.Dequeue();}
+        public static implicit operator int(CppInput _) {if (___input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => ___input.Enqueue(x)); return int.Parse(___input.Dequeue());}
+        public static implicit operator long(CppInput _) {if (___input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => ___input.Enqueue(x)); return long.Parse(___input.Dequeue());}
+        public static implicit operator double(CppInput _) {if (___input.Count == 0) Console.ReadLine().Split(separator).foreachExtension(x => ___input.Enqueue(x)); return double.Parse(___input.Dequeue());}
+    }
+
+    public static class CEnumerableExtension {
+        public delegate void Function<in T>(T val);
+        public static void foreachExtension<T>(this IEnumerable<T> enumerable, Function<T> function) {
+            foreach (var x in enumerable) function(x);
+        }
+    }
+}
+
+
